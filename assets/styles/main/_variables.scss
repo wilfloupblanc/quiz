@@ -1,0 +1,39 @@
+@use "./font";
+
+$font1: "shrikhand", sans-serif;
+$font2: "farro", serif;
+$font3: "audiowide", arial;
+
+$colors: (
+    primary: #fda402,
+    secondary: #f9321f,
+    third: #6E2935FF,
+    light: #ffffff,
+    dark: #111111FF,
+    gre: #9e9e9e,
+    warning: #ff0000,
+    success: #008000FF,
+);
+
+@each $colorName, $value in $colors {
+    .border-#{$colorName} {
+        border: 1px solid $value;
+    }
+
+    .text-#{$colorName} {
+        color: $value;
+    }
+
+    .btn-#{$colorName} {
+        background-color: $value;
+    }
+
+    .btn-outline-#{$colorName} {
+        border: 1px solid $value;
+        color: $value;
+    }
+
+    .bg-#{$colorName} {
+        background-color: $value;
+    }
+}
