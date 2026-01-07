@@ -196,6 +196,7 @@ body {
   font-size: 1.6rem;
   position: relative;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 body a {
   color: black;
@@ -383,17 +384,26 @@ body a {
   border-radius: 1rem;
 }
 
-main {
-  height: 100vh;
-}
-main h1 {
+header {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100vw;
   height: 7rem;
+}
+header .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   padding: 0;
   margin: 0;
   font-family: "audiowide", arial;
+  font-size: 4rem;
+}
+
+main {
+  height: calc(100vh - 7rem);
 }
 main h3 {
   display: flex;
@@ -423,7 +433,7 @@ main .form-container {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin: 0 2rem;
+  margin: 10rem 2rem;
   width: 100vw;
   height: calc(100vh - 30rem);
   border-radius: 5rem;
