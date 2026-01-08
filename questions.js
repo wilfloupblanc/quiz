@@ -84,7 +84,7 @@ export const questions = {
         },
         {
             question: "Dans Attack on Titan, comment s'appellent les créatures géantes ?",
-            image: "./images/titans.jpg",
+            image: "./images/titan.jpg",
             answers: ["Les Démons", "Les Colosses", "Les Titans", "Les Géants"],
             correctAnswer: "Les Titans"
         },
