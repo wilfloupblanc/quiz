@@ -196,7 +196,6 @@ body {
   font-size: 1.6rem;
   position: relative;
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 body a {
   color: black;
@@ -403,7 +402,13 @@ header .title {
 }
 
 main {
-  height: calc(100vh - 7rem);
+  min-height: 100vh;
+  width: 100vw;
+}
+@media only screen and (min-width: 1280px) {
+  main {
+    height: calc(100vh - 7rem);
+  }
 }
 main h3 {
   display: flex;
@@ -433,15 +438,15 @@ main .form-container {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin: 10rem 2rem;
+  margin: 3rem 2rem;
   width: 100vw;
-  height: calc(100vh - 30rem);
+  min-height: calc(100vh - 15rem);
   border-radius: 5rem;
   box-shadow: 2px 5px 8px rgba(0, 0, 0, 0.4);
 }
 @media only screen and (min-width: 1280px) {
   main .form-container {
-    height: calc(100vh - 20rem);
+    min-height: calc(100vh - 20rem);
   }
 }
 main .form-container form {
@@ -495,7 +500,7 @@ main .msg {
 main .btn {
   margin: 1rem;
   border-radius: 3rem;
-  height: 10rem;
+  height: 8rem;
   font-size: 2.5rem;
   box-shadow: 2px 5px 8px rgba(254, 254, 254, 0.4);
 }
@@ -518,6 +523,25 @@ main .score {
   text-align: center;
   font-family: "audiowide", arial;
   font-size: 4rem;
+}
+main .image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+main .image img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2rem;
+  width: 40rem;
+  height: 20rem;
+}
+@media only screen and (min-width: 1280px) {
+  main .image img {
+    width: 50rem;
+    height: 30rem;
+  }
 }
 
 /*# sourceMappingURL=index.css.map */

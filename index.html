@@ -23,21 +23,23 @@
             <label for="name">
                 <input type="text" id="name" name="name" placeholder="Enter your username">
             </label>
-            <select>
-                <option value="category">Category</option>
-                <option value="geography">Geography</option>
-                <option value="history">History</option>
-                <option value="manga">Manga</option>
-            </select>
+            <label for="select">
+                <select class="category-select" id="select" name="select">
+                    <option value="category">Category</option>
+                    <option value="geography">Geography</option>
+                    <option value="history">History</option>
+                    <option value="manga">Manga</option>
+                    <option value="cinema">Movies</option>
+                    <option value="gaming">Gaming</option>
+                </select>
+            </label>
             <input id="start-button" value="Start Quiz" type="submit">
         </form>
     </div>
 
 
-
 </main>
-
-
-<script src="./script.js"></script>
+<script src="./questions.js"></script>
+<script type="module" src="./script.js"></script>
 </body>
 </html>

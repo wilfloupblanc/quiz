@@ -1,112 +1,50 @@
-const inputName = document.querySelector("input[type='text']");
+import {questions} from "./questions.js";
 const nameRegex = /^[a-zA-Z0-9]{3,20}$/;
 const form = document.querySelector('form');
-const start = document.querySelector('.start')
+const start = document.querySelector('.start');
 
 let score = 0;
 let name = "";
+let category = "";
 
-let questions = [
-    {
-        question: "Quel est ce cours ?",
-        answers: [
-            "Javascript",
-            "PHP",
-            "HTML",
-            "CSS"
-        ],
-        correctAnswer: "Javascript",
-    },
-
-    {
-        question: "Quelle est la capitale de la Suisse ?",
-        answers: [
-            "Berne",
-            "Zurich",
-            "Paris",
-            "Genève"
-        ],
-        correctAnswer: "Berne"
-    },
-
-    {
-        question: "Aime-t-on la neige ?",
-        answers: [
-            "Oui",
-            "Non",
-            "Stop SVP",
-            "La mer Noire"
-        ],
-        correctAnswer: "La mer Noire"
-    },
-
-    {
-        question: "Quelle est la bonne écriture de ce mot ?",
-        answers: [
-            "Matiu Petiu",
-            "Matchu Pitchu",
-            "Machtu Pichtu",
-            "Bob"
-        ],
-        correctAnswer: "Matchu Pitchu"
-    },
-
-    {
-        question: "Quel est le meilleur circuit de GT3 ?",
-        answers: [
-            "Fuji",
-            "Bahreïn",
-            "Le Mans",
-            "Portimão"
-        ],
-        correctAnswer: "Le Mans"
-    }
-]
-
-
-inputName.addEventListener("input", (e) => {
-    name = e.target.value;
-
-});
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
+    const inputName = document.querySelector("input[type='text']");
+    const categorySelect = document.querySelector('.category-select');
 
-    if (nameRegex.test(name)) {
-        let currentQuestionIndex = 0;
-        displayQuestion(currentQuestionIndex);
-    } else {
+    name = inputName.value;
+    category = categorySelect.value;
+
+    if (nameRegex.test(name) && category !== "category") {
+        score = 0;
+        displayQuestion(0, category);
+    } else if(!nameRegex.test(name)){
         alert("Le nom doit contenir entre 3 et 20 caractères (lettres et chiffres uniquement)");
+    } else {
+        alert("Veuillez sélectionner une catégorie");
     }
 });
 
-function displayQuestion(currentQuestionIndex) {
+function displayQuestion(currentQuestionIndex, category) {
+    const totalQuestions = questions[category].length;
+
+    if (currentQuestionIndex >= totalQuestions) {
+        endGame(totalQuestions, category);
+        return;
+    }
+
     start.innerHTML = "";
     start.style.backgroundColor = "";
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const lastPlayer = localStorage.getItem('lastPlayer');
-        if (lastPlayer !== null) {
-            const bestScore = getBestScore(lastPlayer);
-            if (bestScore !== null) {
-                const welcome = document.createElement('p');
-                welcome.textContent = `Bienvenue ${bestScore.name} ! Dernier score: ${bestScore.score}/${questions.length}`;
-                welcome.style.color = '#666';
-                start.prepend(welcome);
-            }
-        }
-    });
 
     let message = name + " ton score est de " + score + " points.";
     start.innerHTML += `<h2 class="col-12 text-primary msg">${message}</h2>`;
 
+    start.innerHTML += `<h3 class="col-12 text-primary">${questions[category][currentQuestionIndex].question}</h3>`;
+    start.innerHTML += `<div class="col-12 image"><img src="${questions[category][currentQuestionIndex].image}"></div>`;
 
-    endGame(currentQuestionIndex);
-
-    start.innerHTML += `<h3 class="col-12 text-primary">${questions[currentQuestionIndex].question} </h3>`;
-
-    for (let j = 0; j < questions[currentQuestionIndex].answers.length; j++) {
-        start.innerHTML += `<button class="btn col-5 bg-primary">${questions[currentQuestionIndex].answers[j]}</button>`;
+    for (let j = 0; j < questions[category][currentQuestionIndex].answers.length; j++) {
+        start.innerHTML += `<button class="btn col-12 col-desktop-5 bg-primary">${questions[category][currentQuestionIndex].answers[j]}</button>`;
     }
 
     const btn = document.querySelectorAll('.btn');
@@ -115,68 +53,67 @@ function displayQuestion(currentQuestionIndex) {
         btn.addEventListener("click", (e) => {
             e.preventDefault();
 
-            checkAnswer(btn, currentQuestionIndex);
+            checkAnswer(btn, category, currentQuestionIndex);
 
             setTimeout(() => {
                 currentQuestionIndex++;
-                displayQuestion(currentQuestionIndex);
+                displayQuestion(currentQuestionIndex, category);
             }, 1000);
-        })
-    })
-
+        });
+    });
 }
 
-function checkAnswer(btn, currentQuestionIndex) {
+function checkAnswer(btn, category, currentQuestionIndex) {
     let userAnswer = btn.textContent;
-    let correctAnswer = questions[currentQuestionIndex].correctAnswer;
+    let correctAnswer = questions[category][currentQuestionIndex].correctAnswer;
+
+    const ring = () => {
+        const audio = new Audio();
+        audio.src ="win.mp3";
+        audio.play();
+    };
 
     if(userAnswer !== correctAnswer) {
-        start.innerHTML += `<p class="text-warning">Mauvaise réponse !</p>`
+        start.innerHTML += `<p class="text-warning">Mauvaise réponse !</p>`;
     } else {
-        start.innerHTML += `<p class="text-success">Bonne réponse !</p>`
+        start.innerHTML += `<p class="text-success">Bonne réponse !</p>`;
+        ring()
         score++;
     }
 }
 
-function endGame(currentQuestionIndex) {
-    if (currentQuestionIndex >= questions.length) {
-        start.innerHTML = "";
+function endGame(totalQuestions, category) {
+    start.innerHTML = "";
 
-        let end = "Quiz terminé ! Score: " + score + "/" + questions.length;
+    let end = "Quiz terminé ! Score: " + score + "/" + totalQuestions;
 
-
-        if(score === questions.length) {
-            start.innerHTML = `<h3 class="col-12 text-primary">${end}</h3>` + `<h4 class="col-12 text-primary">Parfait !</h4>`;
-        } else if(score > 2 && score < questions.length) {
-            start.innerHTML = `<h3 class="col-12 text-primary">${end}</h3>` + `<h4 class="col-12 text-primary">Tu y étais presque !</h4>`;
-        } else {
-            start.innerHTML = `<h3 class="col-12 text-primary">${end}</h3>` + `<h4 class="col-12 text-primary">Retente ta chance.</h4>`;
-        }
-
-        start.innerHTML += `<button class="restart">Rejouer</button>`;
-
-        const previousBest = getBestScore(name);
-
-        if (previousBest && previousBest.score >= score) {
-            start.innerHTML += `<p class="col-12 text-primary score">Ton meilleur score: ${previousBest.score}/${questions.length}</p>`;
-            console.log(previousBest.score);
-        } else if (previousBest && score > previousBest.score) {
-            start.innerHTML += `<p class="col-12 text-primary score">🎉 Nouveau record personnel !</p>`;
-        }
-
-        saveScore(name, score);
-        localStorage.setItem('lastPlayer', name);
-
-        console.log(previousBest.score);
-
-        const restart = document.querySelector(".restart");
-
-        restart.addEventListener('click', () => {
-            currentQuestionIndex = 0;
-            score = 0
-            displayQuestion(currentQuestionIndex);
-        })
+    if(score === totalQuestions) {
+        start.innerHTML = `<h3 class="col-12 text-primary">${end}</h3><h4 class="col-12 text-primary">Parfait !</h4>`;
+    } else if(score > 2 && score < totalQuestions) {
+        start.innerHTML = `<h3 class="col-12 text-primary">${end}</h3><h4 class="col-12 text-primary">Tu y étais presque !</h4>`;
+    } else {
+        start.innerHTML = `<h3 class="col-12 text-primary">${end}</h3><h4 class="col-12 text-primary">Retente ta chance.</h4>`;
     }
+
+    start.innerHTML += `<button class="restart">Rejouer</button>`;
+
+    const previousBest = getBestScore(name);
+
+    if (previousBest && previousBest.score >= score) {
+        start.innerHTML += `<p class="col-12 text-primary score">Ton meilleur score: ${previousBest.score}/${totalQuestions}</p>`;
+    } else if (previousBest && score > previousBest.score) {
+        start.innerHTML += `<p class="col-12 text-primary score">🎉 Nouveau record personnel !</p>`;
+    }
+
+    saveScore(name, score);
+    localStorage.setItem('lastPlayer', name);
+
+    const restart = document.querySelector(".restart");
+
+    restart.addEventListener('click', () => {
+        score = 0;
+        displayQuestion(0, category);
+    });
 }
 
 function saveScore(playerName, playerScore) {
@@ -195,8 +132,3 @@ function getBestScore(playerName) {
     }
     return null;
 }
-
-
-
-
-
